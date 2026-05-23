@@ -1,106 +1,65 @@
 # Lab: Form Storage
 
-## Overview  
-Now that we’ve covered the basics of creating custom hooks, let’s use our skills to implement a popular feature when it comes to user convenience. You are working with a repair company and you want the user to be able to keep the inputted form data between refreshes. They don’t want to store it within a `db.json` file as that is less secure, however, we can use the user's local storage to store the data and create a custom hook in order to manipulate the local storage.
+## Overview
+This app demonstrates a custom React hook (`useLocalStorage`) that persists form data in the browser's local storage. Built for a repair company, the form retains user input between page refreshes without storing sensitive data in a backend database.
 
-## Task 1: Define the Problem  
-As a user, one should be able to:
-- Input data in the form.
-- Refresh the page.
-- See the form store the data.
+## Screenshot
 
-## Task 2: Determine the Design  
-- Build a custom hook that will manipulate local storage.
+![App Screenshot](./screenshot.png)
 
-## Task 3: Develop the Code  
-- Create a custom hook, `useLocalStorage`, to manipulate the local storage of the user.
-- Connect the custom hook to the form to persist user data upon refresh.
+## Setup
 
-## Task 4: Test and Refine  
-- Debug and test during development using the provided test suite and React DevTools in Chrome.
+Run `npm install` to install dependencies.
 
-## Task 5: Document and Maintain  
-- Commit as you go, writing meaningful commit messages.
-- Push commit history to GitHub periodically and when the lab is complete.
+Start the app:
 
----
-
-## Tools and Resources  
-- **React Custom Hooks:** [React Docs](https://react.dev/learn/reusing-logic-with-custom-hooks)  
-- **localStorage:** [MDN Web Docs](https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage)  
-
----
-
-## Instructions  
-
-### Set Up  
-Before we begin coding, let's complete the initial setup for this lesson:
-
-#### Fork and Clone  
-1. Go to the provided GitHub repository link.
-2. Fork the repository to your GitHub account.
-3. Clone the forked repository to your local machine.
-4. Open the project in VSCode.
-5. Run `npm install` to install all necessary dependencies.
-
-### Task 1: Define the Problem  
-As a user, one should be able to:
-- Input data in the form.
-- Refresh the page.
-- See the form store the data.
-
-### Task 2: Determine the Design  
-- Build a custom hook that will manipulate local storage.
-
-### Task 3: Develop, Test, and Refine the Code  
-
-#### Open React application in the browser  
-```sh
+```bash
 npm run dev
 ```
 
-#### Run test suite  
-```sh
+Run the test suite:
+
+```bash
 npm run test
 ```
 
-#### Create feature branch  
-- **Create custom hook, `useLocalStorage`**
-  - `useLocalStorage` function will have **2 inputs**:
-    - `key`: The name of the input.
-    - `initialValue`: The initial value of the input.
-  - **Create a state** to represent input data:
-    - The initial value of the state is either the localStorage data or `initialValue`.
-    - **Hint:** Use `localStorage.getItem`.
-  - **Return state and setter function.**
-  - **Build `useEffect`** that will update the localStorage of the user:
-    - The dependency array includes both `key` and `state`.
-    - **Hint:** Use `localStorage.setItem` to set values in the local storage.
-- **Connect custom hook to form:**
-  - Connect to the `name` and `serviceNumber` fields of the form.
-  - Ensure the key of each is `"name"` and `"serviceNumber"` respectively.
-- **Push feature branch and open a PR on GitHub.**
-- **Merge to main.**
+## Features
 
-### Task 4: Document and Maintain  
+- **Persistent form data** — Input data is saved to localStorage and restored on page refresh.
+- **Custom hook** — `useLocalStorage` abstracts all localStorage read/write logic into a reusable hook.
+- **No backend required** — Data is stored client-side only.
 
-#### Best Practice Documentation Steps:
-- Add comments to the code to explain purpose and logic.
-- Clarify intent/functionality of code to other developers.
-- Add a screenshot of the completed work in Markdown in `README.md`.
-- Update `README.md` to reflect the functionality of the application following [this guide](https://makeareadme.com).
-- Delete any stale branches on GitHub.
-- Remove unnecessary/commented-out code.
-- If needed, update `.gitignore` to remove sensitive data.
+## Custom Hook: `useLocalStorage`
 
----
+Located in `src/hooks/useLocalStorage.js`.
 
-## Submission  
-Once all tests are passing and working code is pushed to the GitHub `main` branch, submit your GitHub repo through Canvas using CodeGrade.
+```js
+useLocalStorage(key, initialValue)
+```
 
-## Grading Criteria  
-The application passes all test suites.
+| Parameter | Type | Description |
+|---|---|---|
+| `key` | string | The localStorage key to read/write |
+| `initialValue` | any | Fallback value if no localStorage data exists (defaults to `null`) |
 
-Ensure the application:
-- **Persists user data between refreshes.**
-- **Has a functional custom hook (`useLocalStorage`).**
+Returns `[state, setState]` — same API as `useState`, but synced to localStorage.
+
+## How It Works
+
+1. On mount, the hook checks localStorage for an existing value under the given key.
+2. If found, it initializes state with that value. If not, it uses `initialValue`.
+3. A `useEffect` watches for state changes and writes the updated value back to localStorage.
+4. The form fields (`name` and `serviceNumber`) each use the hook with their respective keys.
+
+## Tools and Resources
+
+- [React Custom Hooks](https://react.dev/learn/reusing-logic-with-custom-hooks)
+- [MDN localStorage](https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage)
+
+## Best Practices
+- Custom hook encapsulates all localStorage logic — components stay clean.
+- No unnecessary console logs or commented-out code.
+- Sensitive data never sent to a backend.
+
+## Submission
+Once all tests pass and code is pushed to GitHub, submit the repo through Canvas using CodeGrade.
